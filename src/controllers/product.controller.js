@@ -21,7 +21,7 @@ router.post("",async (req,res)=>{
            "New Product Updated",
             "Product is created",
            "<h1>Product is created</h1>",
-           [{filename:"name.txt",path:path.join(__dirname,"../name.txt")}]
+           [{filename:"name.html",path:path.join(__dirname,"../name.html")}]
         )
 
 

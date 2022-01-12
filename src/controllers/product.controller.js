@@ -1,9 +1,11 @@
+const path = require("path")
 const express = require("express");
 
 const Product = require("../models/product.model");
 const User = require("../models/user.model")
 
-const transporter = require("../configs/email")
+const transporter = require("../configs/email");
+const sendMail = require("../utils/sendEmail");
 
 const router = express.Router();
 
@@ -12,15 +14,26 @@ router.post("",async (req,res)=>{
         const product = await Product.create(req.body);
         const user = await User.findById(product.user_id).lean().exec();
 
-        const message = {
-            from: "krankumar21895@gmail.com",
-            to: user.email,
-            subject: "New Product Created",
-            text: "Product is created",
-            html: "<h1>Product is created</h1>",
-          };
+        //console.log(path.join(__dirname,"../name.txt"))
+        sendMail(
+           "krankumar21895@gmail.com",
+            [user.email],
+           "New Product Updated",
+            "Product is created",
+           "<h1>Product is created</h1>",
+           [{filename:"name.txt",path:path.join(__dirname,"../name.txt")}]
+        )
 
-          transporter.sendMail(message)
+
+        // const message = {
+            // from: "krankumar21895@gmail.com",
+            // to: user.email,
+            // subject: "New Product Created",
+            // text: "Product is created",
+            // html: "<h1>Product is created</h1>",
+        //   };
+
+        //   transporter.sendMail(message)
 
         return res.status(201).send(product);
     }catch(err){

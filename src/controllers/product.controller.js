@@ -15,8 +15,16 @@ router.post("",async (req,res)=>{
 
 router.get("",async (req,res)=>{
     try{
-        const products = await Product.find().lean() //.exac();
-        return res.status(201).send(products);
+        const page= +req.query.page ||1;//default value 1
+        const size = +req.query.size ||5;//default value 5
+
+
+        const skip =(page -1)*size;
+
+        const products = await Product.find().skip(skip).limit(size).lean() //.exac();
+        const totalPages = Math.ceil((await Product.find().countDocuments())/size);
+
+        return res.status(201).send({products,totalPages});
     }catch(err){
         return res.status(500).send(err.message);
     }
